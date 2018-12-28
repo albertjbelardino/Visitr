@@ -12,7 +12,7 @@ public class LocalToursActivity extends AppCompatActivity {
 
         //key = AIzaSyCI80Oyo1ovK5M2gk-1WNUQdTvK6Plt3sw
 
-        //test
+        //test again
 
     }
 }
