@@ -27,6 +27,7 @@ public class CreateTourActivity extends AppCompatActivity {
     public boolean onLocalToursClicked(MenuItem item)
     {
         Intent i = new Intent(this, LocalToursActivity.class);
+        finish();
         startActivity(i);
         return true;
     }
@@ -34,6 +35,7 @@ public class CreateTourActivity extends AppCompatActivity {
     public boolean onProfileClicked(MenuItem item)
     {
         Intent i = new Intent(this, ProfileActivity.class);
+        finish();
         startActivity(i);
         return(true);
     }
@@ -41,6 +43,7 @@ public class CreateTourActivity extends AppCompatActivity {
     public boolean onYourTourClicked(MenuItem item)
     {
         Intent i = new Intent(this, YourTourActivity.class);
+        finish();
         startActivity(i);
         return(true);
     }
