@@ -1,5 +1,6 @@
 package jackal.visitr.visitr;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import Models.IndividualReviewDO;
 public class CreateTourActivity extends AppCompatActivity {
 
     DynamoDBMapper dynamoDBMapper;
+    MenuImpl menuImpl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class CreateTourActivity extends AppCompatActivity {
 
         Toolbar menuToolbar = (Toolbar) findViewById(R.id.menu_toolbar);
         setSupportActionBar(menuToolbar);
+        menuImpl = new MenuImpl(this);
 
         Button button = (Button) findViewById(R.id.button);
 
@@ -62,6 +65,8 @@ public class CreateTourActivity extends AppCompatActivity {
                 createIndividualReview();
             }
         });
+
+
     }
 
     public void createIndividualReview() {
@@ -80,7 +85,7 @@ public class CreateTourActivity extends AppCompatActivity {
             }
         }).start();
     }
-
+/*
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
@@ -113,6 +118,27 @@ public class CreateTourActivity extends AppCompatActivity {
 
     public boolean onCreateClicked(MenuItem item)
     {
+        return false;
+    }*/
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        return menuImpl.onCreateOptionsMenu(menu);
+    }
+
+    public boolean onLocalToursClicked(MenuItem item) {
+        return menuImpl.onLocalToursClicked(item);
+    }
+
+    public boolean onProfileClicked(MenuItem item) {
+        return menuImpl.onProfileClicked(item);
+    }
+
+    public boolean onYourTourClicked(MenuItem item) {
+        return menuImpl.onYourTourClicked(item);
+    }
+
+    public boolean onCreateClicked(MenuItem item) {
         return false;
     }
 }
