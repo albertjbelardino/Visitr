@@ -24,16 +24,14 @@ public class YourTourActivity extends AppCompatActivity {
         return true;
     }
 
-    public boolean onLocalToursClicked(MenuItem item)
-    {
+    public boolean onLocalToursClicked(MenuItem item) {
         Intent i = new Intent(this, ProfileActivity.class);
         finish();
         startActivity(i);
         return(true);
     }
 
-    public boolean onProfileClicked(MenuItem item)
-    {
+    public boolean onProfileClicked(MenuItem item) {
         Intent i = new Intent(this, ProfileActivity.class);
         finish();
         startActivity(i);
