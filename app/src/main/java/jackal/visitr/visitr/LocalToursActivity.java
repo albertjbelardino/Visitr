@@ -21,8 +21,6 @@ import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 
 public class LocalToursActivity extends AppCompatActivity {
 
-    //home computer test
-
     DynamoDBMapper dynamoDBMapper;
 
     @Override

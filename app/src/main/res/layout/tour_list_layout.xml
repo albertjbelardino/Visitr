@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <TextView android:id="@+id/tour_list_layout"
-    android:layout_height="100px"
+    android:layout_height="60dp"
     android:layout_width="match_parent"
     android:textAlignment="textStart"
-    android:textSize="40px"
+    android:textSize="20dp"
     android:background="@drawable/border"
     android:backgroundTintMode="add"
-    android:backgroundTint="#908080"
-    android:paddingLeft="5px"
+    android:backgroundTint="@color/itemColor"
+    android:paddingLeft="5dp"
+    android:paddingTop="7dp"
     android:text=""
     xmlns:android="http://schemas.android.com/apk/res/android" />
