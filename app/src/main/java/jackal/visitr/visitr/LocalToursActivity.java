@@ -52,17 +52,12 @@ public class LocalToursActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_tours);
 
-        Log.d("LocalTours", "initialize menu");
-        initializeMenu();
-        Log.d("LocalTours", "initialize menu");
-        initializeRecyclerView();
-        Log.d("LocalTours", "initialize menu");
-        initializeGenreSpinner();
-        Log.d("LocalTours", "initialize menu");
         inititalizeMapper();
+        initializeMenu();
+        initializeRecyclerView();
     }
 
-    private void initializeMenu() {
+    public void initializeMenu() {
         menuToolbar = (Toolbar) findViewById(R.id.menu_toolbar);
         setSupportActionBar(menuToolbar);
     }
@@ -123,7 +118,7 @@ public class LocalToursActivity extends AppCompatActivity {
     }
 
     private void initializeGenreSpinner() {
-        genreSpinner = (Spinner) findViewById(R.id.genre_spinner);
+
         GenreDropdownAdapter genreDropdownAdapter = new GenreDropdownAdapter(this, android.R.layout.simple_spinner_dropdown_item);
         genreSpinner.setAdapter(genreDropdownAdapter);
         genreSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -156,7 +151,7 @@ public class LocalToursActivity extends AppCompatActivity {
         });
     }
 
-    private void initializeRecyclerView() {
+    public void initializeRecyclerView() {
         //setting up recyclerView
         tourRecyclerView = (RecyclerView) findViewById(R.id.tour_list);
 

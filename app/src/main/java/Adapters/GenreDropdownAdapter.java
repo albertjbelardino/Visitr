@@ -5,6 +5,8 @@ import android.database.DataSetObserver;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
+import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,10 @@ public class GenreDropdownAdapter extends ArrayAdapter<String> {
     private String[] genre_list;
     private static final String[] FINAL_genre_list = new String[]{"Food", "Sports", "Art"};
 
+    private static class ViewHolder {
+        TextView v;
+    }
+
     public GenreDropdownAdapter(@NonNull Context context, String[] list) {
         super(context, 0, list);
         this.context = context;
@@ -37,14 +43,26 @@ public class GenreDropdownAdapter extends ArrayAdapter<String> {
 
     public GenreDropdownAdapter(@NonNull Context context, int resource) {
         super(context, resource, FINAL_genre_list);
-        setDropDownViewResource(resource);
     }
 
     @Override
     public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        View v = super.getDropDownView(position, convertView, parent);
+        return getCustomView(position, convertView, parent);
+    }
+
+    @NonNull
+    @Override
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        return getCustomView(position, convertView, parent);
+    }
+
+    public View getCustomView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater inflater = LayoutInflater.from(context);
+        View v = inflater.inflate(R.layout.genre_spinner_item, parent, false);
+
+        TextView tv = (TextView)v.findViewById(R.id.spinner_item_tv);
+        tv.setText(FINAL_genre_list[position]);
 
         return v;
     }
-
 }

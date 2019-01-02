@@ -43,7 +43,6 @@ public class TourListAdapter extends RecyclerView.Adapter<TourListAdapter.MyView
                 .inflate(R.layout.tour_list_layout, parent, false);
         MyViewHolder vh = new MyViewHolder(v);
         return vh;
-
     }
 
     @Override
