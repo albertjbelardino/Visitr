@@ -4,7 +4,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,11 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
@@ -35,15 +32,12 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 
-import java.util.Arrays;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
 import java.util.Set;
 
 import Adapters.GenreDropdownAdapter;
 import Adapters.TourListAdapter;
 import Models.TourDO;
-import Objects.BaseTour;
 import Objects.FullTour;
 
 
@@ -227,19 +221,20 @@ public class LocalToursActivity extends AppCompatActivity {
 
         //get tour info from server here
 
+        final FullTour currenttour = tourlist[tempposition];
 
-        tourname.setText(tourlist[tempposition].getName());
-        genre.setText("Genre: " + tourlist[tempposition].getGenre());
-        totaltime.setText("Time Estimate: " + Double.toString(tourlist[tempposition].getTotal_time()) + " minutes");
-        tourcity.setText("City: " + tourlist[tempposition].getCity());
-        rating.setText("Rating: : " + Double.toString(tourlist[tempposition].getRating()));
+        tourname.setText(currenttour.getName());
+        genre.setText("Genre: " + currenttour.getGenre());
+        totaltime.setText("Time Estimate: " + Double.toString(currenttour.getTotal_time()) + " minutes");
+        tourcity.setText("City: " + currenttour.getCity());
+        rating.setText("Rating: : " + Double.toString(currenttour.getRating()));
         String keywordtotal = "";
-        for(String s : tourlist[tempposition].getKeywords())
+        for(String s : currenttour.getKeywords())
         {
             keywordtotal = keywordtotal + (String)s + ", ";
         }
         keywords.setText(keywordtotal);
-        tourdescription.setText(tourlist[tempposition].getDescription());
+        tourdescription.setText(currenttour.getDescription());
 
         alertbuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -253,7 +248,7 @@ public class LocalToursActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent starttourintent = new Intent(currentactivity, YourTourActivity.class);
-                starttourintent.putExtra(START_TOUR_PASS, temptourlist[tempposition]);
+                starttourintent.putExtra(START_TOUR_PASS, currenttour);
                 startActivity(starttourintent);
                 finish();
             }
