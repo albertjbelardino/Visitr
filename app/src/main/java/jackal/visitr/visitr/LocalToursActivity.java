@@ -46,7 +46,6 @@ import Models.TourDO;
 import Objects.BaseTour;
 import Objects.FullTour;
 
-import static jackal.visitr.visitr.FullInfoTour.type.WALKING;
 
 public class LocalToursActivity extends AppCompatActivity {
 
@@ -83,22 +82,24 @@ public class LocalToursActivity extends AppCompatActivity {
 
     public boolean onProfileClicked(MenuItem item) {
         Intent i = new Intent(this, ProfileActivity.class);
-        finish();
         startActivity(i);
+        finish();
         return(true);
     }
 
     public boolean onYourTourClicked(MenuItem item) {
         Intent i = new Intent(this, YourTourActivity.class);
-        finish();
+
         startActivity(i);
+        finish();
         return(true);
     }
 
     public boolean onCreateClicked(MenuItem item) {
         Intent i = new Intent(this, CreateTourActivity.class);
-        finish();
+
         startActivity(i);
+        finish();
         return(true);
     }
 
