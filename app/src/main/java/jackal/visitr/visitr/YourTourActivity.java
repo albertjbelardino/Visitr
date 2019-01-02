@@ -6,13 +6,27 @@ import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
+
+import Objects.FullTour;
 
 public class YourTourActivity extends AppCompatActivity {
+
+    private final String START_TOUR_PASS = "temporarypassword";
+    FullTour currenttour;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_your_tour);
+        Bundle tourinfo = this.getIntent().getExtras();
+        if(tourinfo != null)
+        {
+            currenttour = (FullTour)tourinfo.getSerializable(START_TOUR_PASS);
+            Toast.makeText(this, "TOUR NAME : " + currenttour.getName(), Toast.LENGTH_SHORT).show();
+
+        }
+
 
         Toolbar menuToolbar = (Toolbar) findViewById(R.id.menu_toolbar);
         setSupportActionBar(menuToolbar);
@@ -25,7 +39,7 @@ public class YourTourActivity extends AppCompatActivity {
     }
 
     public boolean onLocalToursClicked(MenuItem item) {
-        Intent i = new Intent(this, ProfileActivity.class);
+        Intent i = new Intent(this, LocalToursActivity.class);
         finish();
         startActivity(i);
         return(true);

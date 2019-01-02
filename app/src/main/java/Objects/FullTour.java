@@ -1,11 +1,14 @@
 package Objects;
 
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
 
 import Models.TourDO;
 
-public class FullTour extends BaseTour {
+public class FullTour implements Serializable {
 
     private int tour_id;
     private String creator_id;
@@ -17,13 +20,14 @@ public class FullTour extends BaseTour {
     private double rating;
     private int reviews;
     private double total_time;
-
-    public FullTour(int ID, String name, String city) {
-        super(ID, name, city);
-    }
+    private String name;
+    private String city;
+    private int ID;
 
     public FullTour(TourDO tourDO) {
-        super(tourDO.get_tour_id(), tourDO.get_name(), tourDO.get_city());
+        this.ID = tourDO.get_tour_id();
+        this.city = tourDO.get_city();
+        this.name = tourDO.get_name();
         this.description = tourDO.get_description();
         this.genre = tourDO.get_genre();
         this.google_city_id = tourDO.get_google_city_id();
@@ -33,6 +37,20 @@ public class FullTour extends BaseTour {
         this.reviews = tourDO.get_reviews();
         this.total_time = tourDO.get_total_time();
     }
+
+
+    public String getName() { return name;}
+
+    public void setName(String name) { this.name = name;}
+
+    public String getCity() { return city;}
+
+    public void setCity(String city) { this.city = city;}
+
+    public int getID() { return ID;}
+
+    public void setID(int ID) { this.ID = ID;}
+
 
     public int getTour_id() {
         return tour_id;
