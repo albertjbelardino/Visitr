@@ -1,4 +1,4 @@
-package jackal.visitr.visitr;
+package Adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,15 +8,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class TourListAdapter extends RecyclerView.Adapter<TourListAdapter.MyViewHolder> {
+import java.util.List;
 
+import Objects.BaseTour;
+import Objects.FullTour;
+import jackal.visitr.visitr.R;
+
+public class TourListAdapter extends RecyclerView.Adapter<TourListAdapter.MyViewHolder> {
 
     private BaseTour[] tourlist;
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView tourname;
         public MyViewHolder(TextView v) {
-
             super(v);
             tourname = v;
         }
@@ -32,9 +36,6 @@ public class TourListAdapter extends RecyclerView.Adapter<TourListAdapter.MyView
         return tourlist.length;
     }
 
-
-
-
     @Override
     public TourListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
@@ -42,7 +43,6 @@ public class TourListAdapter extends RecyclerView.Adapter<TourListAdapter.MyView
                 .inflate(R.layout.tour_list_layout, parent, false);
         MyViewHolder vh = new MyViewHolder(v);
         return vh;
-
     }
 
     @Override
@@ -62,5 +62,11 @@ public class TourListAdapter extends RecyclerView.Adapter<TourListAdapter.MyView
 
     }
 
+    public BaseTour[] getTourlist() {
+        return tourlist;
+    }
 
+    public void setTourlist(BaseTour[] tourlist) {
+        this.tourlist = tourlist;
+    }
 }

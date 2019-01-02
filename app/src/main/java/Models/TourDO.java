@@ -12,6 +12,7 @@ import java.util.Set;
 public class TourDO {
     private int _tour_id;
     private String _creator_id;
+    private String _name;
     private String _description;
     private String _genre;
     private String _google_city_id;
@@ -32,8 +33,8 @@ public class TourDO {
         this._tour_id = _tour_id;
     }
 
-    @DynamoDBRangeKey(attributeName = "tour_id")
-    @DynamoDBAttribute(attributeName = "tour_id")
+    @DynamoDBRangeKey(attributeName = "creator_id")
+    @DynamoDBAttribute(attributeName = "creator_id")
     public String get_creator_id() {
         return _creator_id;
     }
@@ -70,11 +71,11 @@ public class TourDO {
     }
 
     @DynamoDBAttribute(attributeName = "city")
-    public String getCity() {
+    public String get_city() {
         return _city;
     }
 
-    public void setCity(String city) {
+    public void set_city(String city) {
         this._city = city;
     }
 
@@ -92,34 +93,43 @@ public class TourDO {
         return _places;
     }
 
-    public void setPlaces(List<Integer> places) {
+    public void set_places(List<Integer> places) {
         this._places = places;
     }
 
     @DynamoDBAttribute(attributeName = "rating")
-    public double getRating() {
+    public double get_rating() {
         return _rating;
     }
 
-    public void setRating(double rating) {
+    public void set_rating(double rating) {
         this._rating = rating;
     }
 
     @DynamoDBAttribute(attributeName = "reviews")
-    public int getReviews() {
+    public int get_reviews() {
         return _reviews;
     }
 
-    public void setReviews(int reviews) {
+    public void set_reviews(int reviews) {
         this._reviews = reviews;
     }
 
     @DynamoDBAttribute(attributeName = "total_time")
-    public double getTotal_time() {
+    public double get_total_time() {
         return _total_time;
     }
 
-    public void setTotal_time(double total_time) {
+    public void set_total_time(double total_time) {
         this._total_time = total_time;
+    }
+
+    @DynamoDBAttribute(attributeName = "name")
+    public String get_name() {
+        return _name;
+    }
+
+    public void set_name(String _name) {
+        this._name = _name;
     }
 }

@@ -30,27 +30,7 @@ public class CreateTourActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_tour);
 
-        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
-            @Override
-            public void onComplete(AWSStartupResult awsStartupResult) {
-                Log.d("YourMainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
-            }
-        }).execute();
-
-        AWSMobileClient.getInstance().initialize(this).execute();
-
-        AWSCredentialsProvider credentialsProvider = AWSMobileClient.getInstance().getCredentialsProvider();
-        AWSConfiguration configuration = AWSMobileClient.getInstance().getConfiguration();
-
-
-        // Add code to instantiate a AmazonDynamoDBClient
-        AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(credentialsProvider);
-
-        this.dynamoDBMapper = DynamoDBMapper.builder()
-                .dynamoDBClient(dynamoDBClient)
-                .awsConfiguration(configuration)
-                .build();
-
+        inititalizeMapper();
         Toolbar menuToolbar = (Toolbar) findViewById(R.id.menu_toolbar);
         setSupportActionBar(menuToolbar);
 
@@ -81,38 +61,56 @@ public class CreateTourActivity extends AppCompatActivity {
         }).start();
     }
 
+    public void inititalizeMapper() {
+        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
+            @Override
+            public void onComplete(AWSStartupResult awsStartupResult) {
+                Log.d("YourMainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
+            }
+        }).execute();
+
+        AWSMobileClient.getInstance().initialize(this).execute();
+
+        AWSCredentialsProvider credentialsProvider = AWSMobileClient.getInstance().getCredentialsProvider();
+        AWSConfiguration configuration = AWSMobileClient.getInstance().getConfiguration();
+
+        // Add code to instantiate a AmazonDynamoDBClient
+        AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(credentialsProvider);
+
+        this.dynamoDBMapper = DynamoDBMapper.builder()
+                .dynamoDBClient(dynamoDBClient)
+                .awsConfiguration(configuration)
+                .build();
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
 
-    public boolean onLocalToursClicked(MenuItem item)
-    {
+    public boolean onLocalToursClicked(MenuItem item) {
         Intent i = new Intent(this, LocalToursActivity.class);
         finish();
         startActivity(i);
         return true;
     }
 
-    public boolean onProfileClicked(MenuItem item)
-    {
+    public boolean onProfileClicked(MenuItem item) {
         Intent i = new Intent(this, ProfileActivity.class);
         finish();
         startActivity(i);
         return(true);
     }
 
-    public boolean onYourTourClicked(MenuItem item)
-    {
+    public boolean onYourTourClicked(MenuItem item) {
         Intent i = new Intent(this, YourTourActivity.class);
         finish();
         startActivity(i);
         return(true);
     }
 
-    public boolean onCreateClicked(MenuItem item)
-    {
+    public boolean onCreateClicked(MenuItem item) {
         return false;
     }
 }
