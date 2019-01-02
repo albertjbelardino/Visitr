@@ -225,8 +225,10 @@ public class LocalToursActivity extends AppCompatActivity {
         tourRecyclerView.setHasFixedSize(true);
     }
 
-    public void makePopUp(final int tempposition, View view, FullTour[] tourlist, final LocalToursActivity currentactivity)
+    public void makePopUp(View view, FullTour tourfromadapter, final LocalToursActivity currentactivity)
     {
+
+        final FullTour currenttour = tourfromadapter;
 
         final AlertDialog.Builder alertbuilder = new AlertDialog.Builder(view.getContext());
         alertbuilder.setCancelable(true);
@@ -243,8 +245,6 @@ public class LocalToursActivity extends AppCompatActivity {
         Button exitbutton = (Button)popupview.findViewById(R.id.button);
 
         //get tour info from server here
-
-        final FullTour currenttour = tourlist[tempposition];
 
         tourname.setText(currenttour.getName());
         genre.setText("Genre: " + currenttour.getGenre());
@@ -266,7 +266,6 @@ public class LocalToursActivity extends AppCompatActivity {
             }
         });
 
-        final FullTour[] temptourlist = tourlist;
         alertbuilder.setPositiveButton("Start Tour", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {

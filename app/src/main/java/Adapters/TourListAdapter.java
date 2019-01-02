@@ -70,7 +70,7 @@ public class TourListAdapter extends RecyclerView.Adapter<TourListAdapter.MyView
                 @Override
                 public void onClick(View view) {
                     LocalToursActivity tempcallactivity = (LocalToursActivity) activitycontext;
-                    tempcallactivity.makePopUp(position, view, tourlist, tempcallactivity);
+                    tempcallactivity.makePopUp(view, tourlist[position], tempcallactivity);
                 }
             });
         }
