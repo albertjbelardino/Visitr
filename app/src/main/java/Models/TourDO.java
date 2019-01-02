@@ -2,6 +2,7 @@ package Models;
 
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBAttribute;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBHashKey;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBIndexHashKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBRangeKey;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBTable;
 
@@ -52,7 +53,7 @@ public class TourDO {
         this._description = _description;
     }
 
-    @DynamoDBAttribute(attributeName = "genre")
+    @DynamoDBIndexHashKey(attributeName = "genre", globalSecondaryIndexName = "GenreIndex")
     public String get_genre() {
         return _genre;
     }

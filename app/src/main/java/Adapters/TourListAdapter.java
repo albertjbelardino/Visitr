@@ -64,14 +64,16 @@ public class TourListAdapter extends RecyclerView.Adapter<TourListAdapter.MyView
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         final int tempposition = position;
-        holder.tourname.setText(tourlist[position].getName() + "\n" + tourlist[position].getCity());
-        holder.tourname.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                LocalToursActivity tempcallactivity = (LocalToursActivity)activitycontext;
-                tempcallactivity.makePopUp(position, view, tourlist, tempcallactivity);
-            }
-        });
+        if(tourlist[position] != null) {
+            holder.tourname.setText(tourlist[position].getName() + "\n" + tourlist[position].getCity());
+            holder.tourname.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    LocalToursActivity tempcallactivity = (LocalToursActivity) activitycontext;
+                    tempcallactivity.makePopUp(position, view, tourlist, tempcallactivity);
+                }
+            });
+        }
 
     }
 

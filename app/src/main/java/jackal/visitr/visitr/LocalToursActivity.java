@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -61,6 +62,7 @@ public class LocalToursActivity extends AppCompatActivity {
         inititalizeMapper();
         initializeMenu();
         initializeRecyclerView();
+        initializeGenreSpinner();
     }
 
     public void initializeMenu() {
@@ -125,31 +127,52 @@ public class LocalToursActivity extends AppCompatActivity {
                 .build();
     }
 
-    private void initializeGenreSpinner() {
+    public void queryGenre(final AdapterView<?> parent, final int position) {
 
-        GenreDropdownAdapter genreDropdownAdapter = new GenreDropdownAdapter(this, android.R.layout.simple_spinner_dropdown_item);
-        genreSpinner.setAdapter(genreDropdownAdapter);
-        genreSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        new Thread(new Runnable() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            public void run() {
                 String genre_query = parent.getItemAtPosition(position).toString();
 
-                Condition rangeKeyCondition = new Condition()
-                                                .withComparisonOperator(ComparisonOperator.CONTAINS)
-                                                .withAttributeValueList(new AttributeValue().withS(genre_query));
+                TourDO tourDO = new TourDO();
+                tourDO.set_genre(genre_query);
 
-                DynamoDBQueryExpression queryExpression = new DynamoDBQueryExpression()
-                        .withRangeKeyCondition("genre", rangeKeyCondition)
+                Condition rangeKeyCondition = new Condition()
+                        .withComparisonOperator(ComparisonOperator.CONTAINS)
+                        .withAttributeValueList(new AttributeValue().withS(genre_query));
+
+                DynamoDBQueryExpression<TourDO> queryExpression = new DynamoDBQueryExpression<TourDO>()
+                        .withHashKeyValues(tourDO)
+                        .withIndexName("GenreIndex")
                         .withConsistentRead(false);
 
                 PaginatedList<TourDO> result = dynamoDBMapper.query(TourDO.class, queryExpression);
-                FullTour[] tour_array = new FullTour[10];
+                final FullTour[] tour_array = new FullTour[10];
 
-                for(int i = 0; i < result.size(); i++)
+                for (int i = 0; i < result.size(); i++)
                     tour_array[i] = new FullTour(result.get(i));
 
-                tourListAdapter.setTourlist(tour_array);
-                tourRecyclerView.setAdapter(tourListAdapter);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final FullTour[] final_tour_array = tour_array;
+                        tourListAdapter.setTourlist(final_tour_array);
+                        tourRecyclerView.setAdapter(tourListAdapter);
+                    }
+                });
+            }
+        }).start();
+    }
+
+    private void initializeGenreSpinner() {
+        genreSpinner = (Spinner) findViewById(R.id.genre_spinner);
+        genreSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,
+                getResources().getStringArray(R.array.genre_string_array)));
+
+        genreSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                queryGenre(parent, position);
             }
 
             @Override

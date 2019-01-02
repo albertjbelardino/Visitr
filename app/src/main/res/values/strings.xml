@@ -6,5 +6,10 @@
     <string name="menu_profile">Profile</string>
     <string name="menu_create">Create Tour</string>
 
+    <string-array name="genre_string_array">
+        <item>Art</item>
+        <item>Sports</item>
+        <item>Food</item>
+    </string-array>
 
 </resources>
