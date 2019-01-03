@@ -38,6 +38,7 @@ import java.util.Set;
 
 import Adapters.GenreDropdownAdapter;
 import Adapters.TourListAdapter;
+import AndroidFactories.PreferenceFactory;
 import Models.TourDO;
 import Objects.FullTour;
 
@@ -59,6 +60,7 @@ public class LocalToursActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_tours);
 
+
         inititalizeMapper();
         initializeMenu();
         initializeRecyclerView();
@@ -71,39 +73,6 @@ public class LocalToursActivity extends AppCompatActivity {
     }
 
     //menu onClick functions
-
-    public boolean onLocalToursClicked(MenuItem item) {
-        return false;
-    }
-
-    public boolean onProfileClicked(MenuItem item) {
-        Intent i = new Intent(this, ProfileActivity.class);
-        startActivity(i);
-        finish();
-        return(true);
-    }
-
-    public boolean onYourTourClicked(MenuItem item) {
-        Intent i = new Intent(this, YourTourActivity.class);
-
-        startActivity(i);
-        finish();
-        return(true);
-    }
-
-    public boolean onCreateClicked(MenuItem item) {
-        Intent i = new Intent(this, CreateTourActivity.class);
-
-        startActivity(i);
-        finish();
-        return(true);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main_menu, menu);
-        return true;
-    }
 
     private void inititalizeMapper() {
         AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
@@ -242,7 +211,6 @@ public class LocalToursActivity extends AppCompatActivity {
         TextView rating = (TextView)popupview.findViewById(R.id.rating);
         TextView keywords = (TextView)popupview.findViewById(R.id.keywords);
         TextView tourdescription = (TextView)popupview.findViewById(R.id.tourdesciption);
-        Button exitbutton = (Button)popupview.findViewById(R.id.button);
 
         //get tour info from server here
 
@@ -280,4 +248,38 @@ public class LocalToursActivity extends AppCompatActivity {
         alertbuilder.create();
         alertbuilder.show();
     }
+
+    public boolean onLocalToursClicked(MenuItem item) {
+        return false;
+    }
+
+    public boolean onProfileClicked(MenuItem item) {
+        Intent i = new Intent(this, ProfileActivity.class);
+        startActivity(i);
+        finish();
+        return(true);
+    }
+
+    public boolean onYourTourClicked(MenuItem item) {
+        Intent i = new Intent(this, YourTourActivity.class);
+
+        startActivity(i);
+        finish();
+        return(true);
+    }
+
+    public boolean onCreateClicked(MenuItem item) {
+        Intent i = new Intent(this, CreateTourActivity.class);
+
+        startActivity(i);
+        finish();
+        return(true);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
 }

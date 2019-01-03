@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
@@ -18,47 +19,31 @@ import com.amazonaws.mobile.client.AWSStartupResult;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.google.gson.Gson;
 
+import Mappers.Create;
 import Models.IndividualReviewDO;
+import Models.TourDO;
+import Objects.FullTour;
 
 public class CreateTourActivity extends AppCompatActivity {
 
     DynamoDBMapper dynamoDBMapper;
+    Toolbar menuToolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_tour);
 
+        initializeTextViews();
         inititalizeMapper();
-        Toolbar menuToolbar = (Toolbar) findViewById(R.id.menu_toolbar);
-        setSupportActionBar(menuToolbar);
-
-        Button button = (Button) findViewById(R.id.button);
-
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                createIndividualReview();
-            }
-        });
+        initializeMenu();
     }
 
-    public void createIndividualReview() {
-        final IndividualReviewDO individualReviewItem = new IndividualReviewDO();
-
-        individualReviewItem.set_id(Integer.parseInt(((EditText) findViewById(R.id._id)).getText().toString()));
-        individualReviewItem.set_tour_id(Integer.parseInt(((EditText) findViewById(R.id._id)).getText().toString()));
-        individualReviewItem.set_creator_id(((EditText) findViewById(R.id._creator_id)).getText().toString());
-        individualReviewItem.set_content(((EditText) findViewById(R.id._content)).getText().toString());
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                dynamoDBMapper.save(individualReviewItem);
-                // Item saved
-            }
-        }).start();
+    public void initializeMenu() {
+        menuToolbar = (Toolbar) findViewById(R.id.menu_toolbar);
+        setSupportActionBar(menuToolbar);
     }
 
     public void inititalizeMapper() {
@@ -81,6 +66,16 @@ public class CreateTourActivity extends AppCompatActivity {
                 .dynamoDBClient(dynamoDBClient)
                 .awsConfiguration(configuration)
                 .build();
+    }
+
+    public void initializeTextViews() {
+        EditText tourNameEditText, tourLocationEditText, tourDescriptionEditText;
+
+        tourNameEditText        = (EditText) findViewById(R.id.tourNameEditText);
+        tourLocationEditText    = (EditText) findViewById(R.id.tourLocationEditText);
+        tourDescriptionEditText = (EditText) findViewById(R.id.tourDescriptionEditText);
+
+
     }
 
     @Override
