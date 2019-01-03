@@ -1,8 +1,15 @@
 package jackal.visitr.visitr;
 
+import android.Manifest;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Criteria;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.PersistableBundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -13,17 +20,29 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+
+import java.security.Permission;
+
 import AndroidFactories.MenuFactory;
 import AndroidFactories.PopupFactory;
 import Objects.FullTour;
 
-public class YourTourActivity extends AppCompatActivity {
+public class YourTourActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private final String START_TOUR_PASS = "temporarypassword";
     Toolbar menuToolbar;
     FullTour currenttour;
     boolean paused;
     AlertDialog shownPopup;
+    private GoogleMap currentmap;
+    LocationManager locationmanager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +55,7 @@ public class YourTourActivity extends AppCompatActivity {
             //Toast.makeText(this, "TOUR NAME : " + currenttour.getName(), Toast.LENGTH_SHORT).show();
             TextView tourname = this.findViewById(R.id.currentTourName);
             tourname.setText(currenttour.getName());
+            getGoogleMapReady();
 
         }
 
@@ -148,5 +168,46 @@ public class YourTourActivity extends AppCompatActivity {
         MenuFactory.startCreateTourActivity(this);
         //finish();
         return(true);
+    }
+
+    public void getGoogleMapReady()
+    {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        currentmap = googleMap;
+        currentmap.getUiSettings().setMyLocationButtonEnabled(false);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED) {
+
+            currentmap.setMyLocationEnabled(true);
+
+            centerMap();
+
+
+        }
+
+
+    }
+
+    public void centerMap()
+    {
+        Criteria criteria = new Criteria();
+        locationmanager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        String provider = locationmanager.getBestProvider(criteria, false);
+        Location location = locationmanager.getLastKnownLocation(provider);
+        double lat =  location.getLatitude();
+        double lng = location.getLongitude();
+        LatLng coordinate = new LatLng(lat, lng);
+        CameraUpdate positioncamera = CameraUpdateFactory.newLatLng(coordinate);
+
+        currentmap.moveCamera(positioncamera);
+
+        CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+
+        currentmap.moveCamera(zoom);
     }
 }
