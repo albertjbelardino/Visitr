@@ -65,6 +65,7 @@ public class LocalToursActivity extends AppCompatActivity {
         initializeMenu();
         initializeRecyclerView();
         initializeGenreSpinner();
+        initializeFullTour();
     }
 
     public void initializeMenu() {
@@ -281,5 +282,48 @@ public class LocalToursActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
+
+    private void initializeFullTour() {
+
+        if(PreferenceFactory
+                .getSavedObjectFromPreference(
+                        this, "ApplicationTour",
+                        "ApplicationTourKey", FullTour.class) == null)
+
+            PreferenceFactory.saveObjectToSharedPreference(this, "ApplicationTour",
+                    "ApplicationTourKey", new FullTour());
+
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

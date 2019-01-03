@@ -21,6 +21,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.google.gson.Gson;
 
+import AndroidFactories.PreferenceFactory;
 import Mappers.Create;
 import Models.IndividualReviewDO;
 import Models.TourDO;
@@ -69,11 +70,49 @@ public class CreateTourActivity extends AppCompatActivity {
     }
 
     public void initializeTextViews() {
+
         EditText tourNameEditText, tourLocationEditText, tourDescriptionEditText;
 
         tourNameEditText        = (EditText) findViewById(R.id.tourNameEditText);
         tourLocationEditText    = (EditText) findViewById(R.id.tourLocationEditText);
         tourDescriptionEditText = (EditText) findViewById(R.id.tourDescriptionEditText);
+        /*
+        FullTour fullTour = new FullTour();
+        fullTour.setName(tourNameEditText.getText().toString());
+        fullTour.setGoogle_city_id(tourLocationEditText.getText().toString());
+        fullTour.setDescription(tourDescriptionEditText.getText().toString());
+        */
+
+
+
+        FullTour fullTour = PreferenceFactory.getSavedObjectFromPreference(this,
+                getResources().getString(R.string.ApplicationTour),
+                getResources().getString(R.string.ApplicationTourKey), FullTour.class);
+
+        if(fullTour != null) {
+            if(fullTour.getName() != null) {
+                tourNameEditText.setText(fullTour.getName());
+            }
+            if(fullTour.getDescription() != null) {
+                tourDescriptionEditText.setText(fullTour.getDescription());
+            }
+            if(fullTour.getGoogle_city_id() != null) {
+                tourLocationEditText.setText(fullTour.getGoogle_city_id());
+            }
+        }
+        //get tour from shared preferences
+
+        //if item in preferences has no value, print stock text
+            //Name
+            //Location
+            //Description
+
+        //else
+            //for each value in tour
+                //if value is not null
+                    //put value on edit text
+                //
+                    //put stock text
 
 
     }

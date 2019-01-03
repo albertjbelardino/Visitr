@@ -22,6 +22,10 @@ public class FullTour implements Serializable {
     private String city;
     private int ID;
 
+    public FullTour() {
+
+    }
+
     public FullTour(TourDO tourDO) {
         this.ID = tourDO.get_tour_id();
         this.city = tourDO.get_city();
