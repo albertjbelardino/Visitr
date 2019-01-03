@@ -38,6 +38,7 @@ import java.util.Set;
 
 import Adapters.GenreDropdownAdapter;
 import Adapters.TourListAdapter;
+import AndroidFactories.MenuFactory;
 import AndroidFactories.PreferenceFactory;
 import Models.TourDO;
 import Objects.FullTour;
@@ -52,14 +53,10 @@ public class LocalToursActivity extends AppCompatActivity {
     TourListAdapter tourListAdapter;
     private final String START_TOUR_PASS = "temporarypassword";
 
-    //genre dropdown menu
-    //on dropdown menu click, query database for that genre, parse array result, create new tour list adapter, put new adapter in recycler view
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_tours);
-
 
         inititalizeMapper();
         initializeMenu();
@@ -72,8 +69,6 @@ public class LocalToursActivity extends AppCompatActivity {
         menuToolbar = (Toolbar) findViewById(R.id.menu_toolbar);
         setSupportActionBar(menuToolbar);
     }
-
-    //menu onClick functions
 
     private void inititalizeMapper() {
         AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
@@ -255,24 +250,19 @@ public class LocalToursActivity extends AppCompatActivity {
     }
 
     public boolean onProfileClicked(MenuItem item) {
-        Intent i = new Intent(this, ProfileActivity.class);
-        startActivity(i);
+        MenuFactory.startProfileActivity(this);
         finish();
         return(true);
     }
 
     public boolean onYourTourClicked(MenuItem item) {
-        Intent i = new Intent(this, YourTourActivity.class);
-
-        startActivity(i);
+        MenuFactory.startYourTourActivity(this);
         finish();
         return(true);
     }
 
     public boolean onCreateClicked(MenuItem item) {
-        Intent i = new Intent(this, CreateTourActivity.class);
-
-        startActivity(i);
+        MenuFactory.startCreateTourActivity(this);
         finish();
         return(true);
     }

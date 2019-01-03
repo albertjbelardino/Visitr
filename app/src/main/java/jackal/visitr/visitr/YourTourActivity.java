@@ -8,11 +8,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import AndroidFactories.MenuFactory;
 import Objects.FullTour;
 
 public class YourTourActivity extends AppCompatActivity {
 
     private final String START_TOUR_PASS = "temporarypassword";
+    Toolbar menuToolbar;
     FullTour currenttour;
 
     @Override
@@ -28,7 +30,11 @@ public class YourTourActivity extends AppCompatActivity {
         }
 
 
-        Toolbar menuToolbar = (Toolbar) findViewById(R.id.menu_toolbar);
+        initializeMenu();
+    }
+
+    private void initializeMenu() {
+        menuToolbar = (Toolbar) findViewById(R.id.menu_toolbar);
         setSupportActionBar(menuToolbar);
     }
 
@@ -39,16 +45,13 @@ public class YourTourActivity extends AppCompatActivity {
     }
 
     public boolean onLocalToursClicked(MenuItem item) {
-        Intent i = new Intent(this, LocalToursActivity.class);
-        startActivity(i);
+        MenuFactory.startLocalToursActivity(this);
         finish();
         return(true);
     }
 
     public boolean onProfileClicked(MenuItem item) {
-        Intent i = new Intent(this, ProfileActivity.class);
-
-        startActivity(i);
+        MenuFactory.startProfileActivity(this);
         finish();
         return(true);
     }
@@ -60,9 +63,7 @@ public class YourTourActivity extends AppCompatActivity {
 
     public boolean onCreateClicked(MenuItem item)
     {
-        Intent i = new Intent(this, CreateTourActivity.class);
-
-        startActivity(i);
+        MenuFactory.startCreateTourActivity(this);
         finish();
         return(true);
     }

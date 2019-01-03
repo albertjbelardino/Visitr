@@ -21,6 +21,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.google.gson.Gson;
 
+import AndroidFactories.MenuFactory;
 import AndroidFactories.PreferenceFactory;
 import Mappers.Create;
 import Models.IndividualReviewDO;
@@ -119,24 +120,19 @@ public class CreateTourActivity extends AppCompatActivity {
     }
 
     public boolean onLocalToursClicked(MenuItem item) {
-        Intent i = new Intent(this, LocalToursActivity.class);
-        startActivity(i);
+        MenuFactory.startLocalToursActivity(this);
         finish();
         return true;
     }
 
     public boolean onProfileClicked(MenuItem item) {
-        Intent i = new Intent(this, ProfileActivity.class);
-
-        startActivity(i);
+        MenuFactory.startProfileActivity(this);
         finish();
         return(true);
     }
 
     public boolean onYourTourClicked(MenuItem item) {
-        Intent i = new Intent(this, YourTourActivity.class);
-
-        startActivity(i);
+        MenuFactory.startYourTourActivity(this);
         finish();
         return(true);
     }
