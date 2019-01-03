@@ -7,6 +7,13 @@
     <string name="menu_create">Create Tour</string>
     <string name="ApplicationTour">ApplicationTour</string>
     <string name="ApplicationTourKey">ApplicationTourKey</string>
+    <string name="stop_button">STOP</string>
+    <string name="pause_button_pause">PAUSE</string>
+    <string name="pause_button_resume">RESUME</string>
+    <string name="stop_tour_yes">YES</string>
+    <string name="stop_tour_no">NO</string>
+    <string name="stop_tour_review">YES AND REVIEW</string>
+    <string name="stop_tour_text">Are you sure you want to end your tour?</string>
 
     <string-array name="genre_string_array">
         <item></item>

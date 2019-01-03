@@ -35,7 +35,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     public boolean onLocalToursClicked(MenuItem item) {
         MenuFactory.startLocalToursActivity(this);
-        finish();
+        //finish();
         return(true);
     }
 
@@ -46,13 +46,13 @@ public class ProfileActivity extends AppCompatActivity {
 
     public boolean onYourTourClicked(MenuItem item) {
         MenuFactory.startYourTourActivity(this);
-        finish();
+        //finish();
         return(true);
     }
 
     public boolean onCreateClicked(MenuItem item) {
         MenuFactory.startCreateTourActivity(this);
-        finish();
+        //finish();
         return(true);
     }
 }

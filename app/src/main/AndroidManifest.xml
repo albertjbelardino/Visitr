@@ -19,10 +19,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".YourTourActivity" />
-        <activity android:name=".ProfileActivity" />
-        <activity android:name=".CreateTourActivity" />
-        <activity android:name=".AddPlaceActivity"></activity>
+        <activity android:name=".YourTourActivity"
+                android:launchMode="singleInstance"/>
+        <activity android:name=".ProfileActivity"
+            android:launchMode="singleInstance"/>
+        <activity android:name=".CreateTourActivity"
+            android:launchMode="singleInstance"/>
+        <activity android:name=".AddPlaceActivity"
+            android:launchMode="singleInstance"></activity>
     </application>
 
 </manifest>

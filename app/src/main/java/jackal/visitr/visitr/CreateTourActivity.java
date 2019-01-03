@@ -147,19 +147,19 @@ public class CreateTourActivity extends AppCompatActivity {
 
     public boolean onLocalToursClicked(MenuItem item) {
         MenuFactory.startLocalToursActivity(this);
-        finish();
+        //finish();
         return true;
     }
 
     public boolean onProfileClicked(MenuItem item) {
         MenuFactory.startProfileActivity(this);
-        finish();
+        //finish();
         return(true);
     }
 
     public boolean onYourTourClicked(MenuItem item) {
         MenuFactory.startYourTourActivity(this);
-        finish();
+        //finish();
         return(true);
     }
 

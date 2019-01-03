@@ -218,6 +218,7 @@ public class LocalToursActivity extends AppCompatActivity {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 Intent starttourintent = new Intent(currentactivity, YourTourActivity.class);
+                starttourintent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 starttourintent.putExtra(START_TOUR_PASS, currenttour);
                 startActivity(starttourintent);
                 finish();
@@ -234,19 +235,19 @@ public class LocalToursActivity extends AppCompatActivity {
 
     public boolean onProfileClicked(MenuItem item) {
         MenuFactory.startProfileActivity(this);
-        finish();
+        //finish();
         return(true);
     }
 
     public boolean onYourTourClicked(MenuItem item) {
         MenuFactory.startYourTourActivity(this);
-        finish();
+        //finish();
         return(true);
     }
 
     public boolean onCreateClicked(MenuItem item) {
         MenuFactory.startCreateTourActivity(this);
-        finish();
+        //finish();
         return(true);
     }
 

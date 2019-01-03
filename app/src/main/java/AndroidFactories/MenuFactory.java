@@ -12,21 +12,25 @@ public class MenuFactory {
 
     public static void startLocalToursActivity(Context context) {
         Intent i = new Intent(context, LocalToursActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(i);
     }
 
     public static void startCreateTourActivity(Context context) {
         Intent i = new Intent(context, CreateTourActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(i);
     }
 
     public static void startProfileActivity(Context context) {
         Intent i = new Intent(context, ProfileActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(i);
     }
 
     public static void startYourTourActivity(Context context) {
         Intent i = new Intent(context, YourTourActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(i);
     }
 
