@@ -8,8 +8,11 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
@@ -33,7 +36,8 @@ public class CreateTourActivity extends AppCompatActivity {
     DynamoDBMapper dynamoDBMapper;
     Toolbar menuToolbar;
     EditText tourNameEditText, tourLocationEditText, tourDescriptionEditText;
-
+    Spinner genreSpinner;
+    String genreString;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +46,24 @@ public class CreateTourActivity extends AppCompatActivity {
 
         initializeTextViews();
         inititalizeMapper();
+        initializeGenreSpinner();
         initializeMenu();
+    }
+
+    private void initializeGenreSpinner() {
+        genreSpinner = (Spinner) findViewById(R.id.genre_spinner_create_tour);
+        genreSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,
+                getResources().getStringArray(R.array.genre_string_array)));
+        genreSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                genreString = parent.getItemAtPosition(position).toString();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @Override
@@ -55,6 +76,7 @@ public class CreateTourActivity extends AppCompatActivity {
         tour.setName(tourNameEditText.getText().toString());
         tour.setGoogle_city_id(tourLocationEditText.getText().toString());
         tour.setDescription(tourDescriptionEditText.getText().toString());
+        tour.setGenre(genreString);
 
         PreferenceFactory.saveObjectToSharedPreference(this,
                 getResources().getString(R.string.ApplicationTour),
@@ -109,6 +131,10 @@ public class CreateTourActivity extends AppCompatActivity {
             }
             if(fullTour.getGoogle_city_id() != null) {
                 tourLocationEditText.setText(fullTour.getGoogle_city_id());
+            }
+            if(fullTour.getGenre() != null) {
+                //TODO: make it so that the genre spinner returns to its dropdown position
+                //TODO: i.e. : change genre while making a tour, on return don't return to default position
             }
         }
     }

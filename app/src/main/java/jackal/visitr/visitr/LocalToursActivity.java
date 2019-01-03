@@ -132,7 +132,7 @@ public class LocalToursActivity extends AppCompatActivity {
     }
 
     private void initializeGenreSpinner() {
-        genreSpinner = (Spinner) findViewById(R.id.genre_spinner);
+        genreSpinner = (Spinner) findViewById(R.id.genre_spinner_local_tours);
         genreSpinner.setAdapter(new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line,
                 getResources().getStringArray(R.array.genre_string_array)));
 
