@@ -31,6 +31,8 @@ public class CreateTourActivity extends AppCompatActivity {
 
     DynamoDBMapper dynamoDBMapper;
     Toolbar menuToolbar;
+    EditText tourNameEditText, tourLocationEditText, tourDescriptionEditText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,24 @@ public class CreateTourActivity extends AppCompatActivity {
         initializeTextViews();
         inititalizeMapper();
         initializeMenu();
+    }
+
+    @Override
+    protected void onStop() {
+
+        FullTour tour = PreferenceFactory.getSavedObjectFromPreference(this,
+                getResources().getString(R.string.ApplicationTour),
+                getResources().getString(R.string.ApplicationTourKey), FullTour.class);
+
+        tour.setName(tourNameEditText.getText().toString());
+        tour.setGoogle_city_id(tourLocationEditText.getText().toString());
+        tour.setDescription(tourDescriptionEditText.getText().toString());
+
+        PreferenceFactory.saveObjectToSharedPreference(this,
+                getResources().getString(R.string.ApplicationTour),
+                getResources().getString(R.string.ApplicationTourKey), tour);
+
+        super.onStop();
     }
 
     public void initializeMenu() {
@@ -71,19 +91,9 @@ public class CreateTourActivity extends AppCompatActivity {
 
     public void initializeTextViews() {
 
-        EditText tourNameEditText, tourLocationEditText, tourDescriptionEditText;
-
         tourNameEditText        = (EditText) findViewById(R.id.tourNameEditText);
         tourLocationEditText    = (EditText) findViewById(R.id.tourLocationEditText);
         tourDescriptionEditText = (EditText) findViewById(R.id.tourDescriptionEditText);
-        /*
-        FullTour fullTour = new FullTour();
-        fullTour.setName(tourNameEditText.getText().toString());
-        fullTour.setGoogle_city_id(tourLocationEditText.getText().toString());
-        fullTour.setDescription(tourDescriptionEditText.getText().toString());
-        */
-
-
 
         FullTour fullTour = PreferenceFactory.getSavedObjectFromPreference(this,
                 getResources().getString(R.string.ApplicationTour),
@@ -100,21 +110,6 @@ public class CreateTourActivity extends AppCompatActivity {
                 tourLocationEditText.setText(fullTour.getGoogle_city_id());
             }
         }
-        //get tour from shared preferences
-
-        //if item in preferences has no value, print stock text
-            //Name
-            //Location
-            //Description
-
-        //else
-            //for each value in tour
-                //if value is not null
-                    //put value on edit text
-                //
-                    //put stock text
-
-
     }
 
     @Override

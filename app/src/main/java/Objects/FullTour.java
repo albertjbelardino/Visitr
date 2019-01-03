@@ -1,5 +1,7 @@
 package Objects;
 
+import android.support.annotation.Nullable;
+
 import java.io.Serializable;
 import java.util.List;
 import java.util.Set;
@@ -43,6 +45,7 @@ public class FullTour implements Serializable {
 
     public String getName() { return name;}
 
+    @Nullable
     public void setName(String name) { this.name = name;}
 
     public String getCity() { return city;}
