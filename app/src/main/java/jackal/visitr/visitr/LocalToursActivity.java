@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -39,6 +40,7 @@ import java.util.Set;
 import Adapters.GenreDropdownAdapter;
 import Adapters.TourListAdapter;
 import AndroidFactories.MenuFactory;
+import AndroidFactories.PopupFactory;
 import AndroidFactories.PreferenceFactory;
 import Models.TourDO;
 import Objects.FullTour;
@@ -137,14 +139,15 @@ public class LocalToursActivity extends AppCompatActivity {
         genreSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                queryGenre(parent, position);
+                if(position != 0)
+                    queryGenre(parent, position);
             }
-
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
 
             }
         });
+        genreSpinner.setEnabled(true);
     }
 
     public void initializeRecyclerView() {
@@ -192,37 +195,17 @@ public class LocalToursActivity extends AppCompatActivity {
 
     public void makePopUp(View view, FullTour tourfromadapter, final LocalToursActivity currentactivity)
     {
-
         final FullTour currenttour = tourfromadapter;
-
         final AlertDialog.Builder alertbuilder = new AlertDialog.Builder(view.getContext());
         alertbuilder.setCancelable(true);
         LayoutInflater layoutinflater = LayoutInflater.from(view.getContext());
         final View popupview = layoutinflater.inflate(R.layout.tourpopup, null);
 
-        TextView tourname = (TextView)popupview.findViewById(R.id.tourName);
-        TextView genre = (TextView)popupview.findViewById(R.id.genre);
-        TextView totaltime = (TextView)popupview.findViewById(R.id.totalTime);
-        TextView tourcity = (TextView)popupview.findViewById(R.id.tourCity);
-        TextView rating = (TextView)popupview.findViewById(R.id.rating);
-        TextView keywords = (TextView)popupview.findViewById(R.id.keywords);
-        TextView tourdescription = (TextView)popupview.findViewById(R.id.tourdesciption);
+        /**************************************************/
 
-        //get tour info from server here
+        PopupFactory.fillTourPopup(popupview, currenttour);
 
-        if(currenttour.getName() != null) tourname.setText(currenttour.getName());
-        if(currenttour.getGenre() != null)genre.setText("Genre: " + currenttour.getGenre());
-        if(currenttour.getTotal_time() != null) totaltime.setText("Time Estimate: " + Double.toString(currenttour.getTotal_time()) + " minutes");
-        if(currenttour.getCity() != null)tourcity.setText("City: " + currenttour.getCity());
-        if(currenttour.getRating() != null)  rating.setText("Rating: : " + Double.toString(currenttour.getRating()));
-        if(currenttour.getKeywords() != null) {
-            String keywordtotal = "";
-            for (String s : currenttour.getKeywords()) {
-                keywordtotal = keywordtotal + (String) s + ", ";
-            }
-            keywords.setText(keywordtotal);
-        }
-        if(currenttour.getDescription() != null) tourdescription.setText(currenttour.getDescription());
+        /****************************************************/
 
         alertbuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override

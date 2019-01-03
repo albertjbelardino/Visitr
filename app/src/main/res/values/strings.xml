@@ -9,6 +9,7 @@
     <string name="ApplicationTourKey">ApplicationTourKey</string>
 
     <string-array name="genre_string_array">
+        <item></item>
         <item>Art</item>
         <item>Sports</item>
         <item>Food</item>
