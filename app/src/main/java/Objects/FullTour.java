@@ -15,9 +15,9 @@ public class FullTour implements Serializable {
     private String google_city_id;
     private Set<String> keywords;
     private List<Integer> places;
-    private double rating;
+    private Double rating;
     private int reviews;
-    private double total_time;
+    private Double total_time;
     private String name;
     private String city;
     private int ID;
@@ -106,7 +106,7 @@ public class FullTour implements Serializable {
         this.places = places;
     }
 
-    public double getRating() {
+    public Double getRating() {
         return rating;
     }
 
@@ -122,7 +122,7 @@ public class FullTour implements Serializable {
         this.reviews = reviews;
     }
 
-    public double getTotal_time() {
+    public Double getTotal_time() {
         return total_time;
     }
 

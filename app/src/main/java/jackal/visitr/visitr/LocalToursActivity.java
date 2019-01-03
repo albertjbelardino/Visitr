@@ -246,18 +246,19 @@ public class LocalToursActivity extends AppCompatActivity {
 
         final FullTour currenttour = tourlist[tempposition];
 
-        tourname.setText(currenttour.getName());
-        genre.setText("Genre: " + currenttour.getGenre());
-        totaltime.setText("Time Estimate: " + Double.toString(currenttour.getTotal_time()) + " minutes");
-        tourcity.setText("City: " + currenttour.getCity());
-        rating.setText("Rating: : " + Double.toString(currenttour.getRating()));
-        String keywordtotal = "";
-        for(String s : currenttour.getKeywords())
-        {
-            keywordtotal = keywordtotal + (String)s + ", ";
+        if(currenttour.getName() != null) tourname.setText(currenttour.getName());
+        if(currenttour.getGenre() != null)genre.setText("Genre: " + currenttour.getGenre());
+        if(currenttour.getTotal_time() != null) totaltime.setText("Time Estimate: " + Double.toString(currenttour.getTotal_time()) + " minutes");
+        if(currenttour.getCity() != null)tourcity.setText("City: " + currenttour.getCity());
+        if(currenttour.getRating() != null)  rating.setText("Rating: : " + Double.toString(currenttour.getRating()));
+        if(currenttour.getKeywords() != null) {
+            String keywordtotal = "";
+            for (String s : currenttour.getKeywords()) {
+                keywordtotal = keywordtotal + (String) s + ", ";
+            }
+            keywords.setText(keywordtotal);
         }
-        keywords.setText(keywordtotal);
-        tourdescription.setText(currenttour.getDescription());
+        if(currenttour.getDescription() != null) tourdescription.setText(currenttour.getDescription());
 
         alertbuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             @Override
@@ -280,6 +281,4 @@ public class LocalToursActivity extends AppCompatActivity {
         alertbuilder.create();
         alertbuilder.show();
     }
-
-
 }
