@@ -8,9 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -28,6 +30,7 @@ import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.AutocompletePrediction;
 import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -58,6 +61,9 @@ public class CreateTourActivity extends AppCompatActivity implements GoogleApiCl
     LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
             new LatLng(-40, -168), new LatLng(71, 136));
 
+    private String city_name;
+    private String google_places_id;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,16 +91,16 @@ public class CreateTourActivity extends AppCompatActivity implements GoogleApiCl
                 LAT_LNG_BOUNDS, null);
 
         tourLocationAutoCompleteTextView.setAdapter(placeAutocompleteAdapter);
-    }
 
-    private void initializeSuggestions(CharSequence charSequence) {
-        /*
+        tourLocationAutoCompleteTextView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                AutocompletePrediction autocompletePrediction = (AutocompletePrediction) parent.getItemAtPosition(position);
 
-        TODO
-        query the places api, parse result, put in array
-        make adapter with array
-        put adapter in array
-        set on click listener*/
+                city_name = autocompletePrediction.getFullText(null).toString();
+                google_places_id = autocompletePrediction.getPlaceId();
+            }
+        });
     }
 
     private void initializeGenreSpinner() {
@@ -123,6 +129,8 @@ public class CreateTourActivity extends AppCompatActivity implements GoogleApiCl
         tour.setName(tourNameEditText.getText().toString());
         tour.setDescription(tourDescriptionEditText.getText().toString());
         tour.setGenre(genreString);
+        tour.setGoogle_city_id(google_places_id);
+        tour.setCity(city_name);
 
         PreferenceFactory.saveObjectToSharedPreference(this,
                 getResources().getString(R.string.ApplicationTour),
@@ -172,7 +180,7 @@ public class CreateTourActivity extends AppCompatActivity implements GoogleApiCl
                 tourNameEditText.setText(fullTour.getName());
             }
             if(fullTour.getDescription() != null) {
-                tourDescriptionEditText.setText(fullTour.getDescription());
+                tourDescriptionEditText.setText(fullTour.getCity());
             }
             if(fullTour.getGoogle_city_id() != null) {
                 tourLocationAutoCompleteTextView.setText(fullTour.getGoogle_city_id());
