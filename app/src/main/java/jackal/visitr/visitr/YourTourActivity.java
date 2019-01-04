@@ -3,12 +3,10 @@ package jackal.visitr.visitr;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
-import android.os.PersistableBundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,15 +21,12 @@ import android.widget.Toast;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.security.Permission;
 
 import AndroidFactories.MenuFactory;
-import AndroidFactories.PopupFactory;
 import Objects.FullTour;
 
 public class YourTourActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -52,7 +47,6 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
         if(tourinfo != null)
         {
             currenttour = (FullTour)tourinfo.getSerializable(START_TOUR_PASS);
-            //Toast.makeText(this, "TOUR NAME : " + currenttour.getName(), Toast.LENGTH_SHORT).show();
             TextView tourname = this.findViewById(R.id.currentTourName);
             tourname.setText(currenttour.getName());
             getGoogleMapReady();
@@ -180,34 +174,30 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         currentmap = googleMap;
         currentmap.getUiSettings().setMyLocationButtonEnabled(false);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED) {
-
-            currentmap.setMyLocationEnabled(true);
-
-            centerMap();
-
-
-        }
-
-
+        centerMap();
     }
 
     public void centerMap()
     {
-        Criteria criteria = new Criteria();
-        locationmanager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        String provider = locationmanager.getBestProvider(criteria, false);
-        Location location = locationmanager.getLastKnownLocation(provider);
-        double lat =  location.getLatitude();
-        double lng = location.getLongitude();
-        LatLng coordinate = new LatLng(lat, lng);
-        CameraUpdate positioncamera = CameraUpdateFactory.newLatLng(coordinate);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED)
+        {
 
-        currentmap.moveCamera(positioncamera);
+            currentmap.setMyLocationEnabled(true);
+            Criteria criteria = new Criteria();
+            locationmanager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+            String provider = locationmanager.getBestProvider(criteria, false);
+            Location location = locationmanager.getLastKnownLocation(provider);
+            double lat = location.getLatitude();
+            double lng = location.getLongitude();
+            LatLng coordinate = new LatLng(lat, lng);
+            CameraUpdate positioncamera = CameraUpdateFactory.newLatLng(coordinate);
 
-        CameraUpdate zoom=CameraUpdateFactory.zoomTo(15);
+            currentmap.moveCamera(positioncamera);
 
-        currentmap.moveCamera(zoom);
+            CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+
+            currentmap.moveCamera(zoom);
+        }
     }
 }
