@@ -174,6 +174,7 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         currentmap = googleMap;
         currentmap.getUiSettings().setMyLocationButtonEnabled(false);
+
         centerMap();
     }
 

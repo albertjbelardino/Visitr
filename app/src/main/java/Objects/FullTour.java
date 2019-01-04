@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 
 import Models.TourDO;
+import jackal.visitr.visitr.BuildConfig;
 
 public class FullTour implements Serializable {
 
