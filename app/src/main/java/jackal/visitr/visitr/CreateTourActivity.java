@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.mobile.client.AWSMobileClient;
@@ -76,6 +77,12 @@ public class CreateTourActivity extends AppCompatActivity implements GoogleApiCl
         initializeMenu();
     }
 
+    @Override
+    protected void onResume() {
+        initializeTextViews();
+        super.onResume();
+    }
+
     private void initializeAutoCompleteTextViews() {
 
         tourLocationAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.tourLocationAutoCompleteTextView);
@@ -118,6 +125,8 @@ public class CreateTourActivity extends AppCompatActivity implements GoogleApiCl
             }
         });
     }
+
+
 
     @Override
     protected void onStop() {
@@ -180,16 +189,18 @@ public class CreateTourActivity extends AppCompatActivity implements GoogleApiCl
                 tourNameEditText.setText(fullTour.getName());
             }
             if(fullTour.getDescription() != null) {
-                tourDescriptionEditText.setText(fullTour.getCity());
+                tourDescriptionEditText.setText(fullTour.getGoogle_city_id());
             }
             if(fullTour.getGoogle_city_id() != null) {
-                tourLocationAutoCompleteTextView.setText(fullTour.getGoogle_city_id());
+                tourLocationAutoCompleteTextView.setText(fullTour.getCity());
             }
             if(fullTour.getGenre() != null) {
                 //TODO: make it so that the genre spinner returns to its dropdown position
                 //TODO: i.e. : change genre while making a tour, on return don't return to default position
             }
         }
+
+        Toast.makeText(this, fullTour.getGoogle_city_id(),Toast.LENGTH_LONG).show();
     }
 
 
