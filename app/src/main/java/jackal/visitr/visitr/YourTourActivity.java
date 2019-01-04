@@ -44,18 +44,12 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_your_tour);
         Bundle tourinfo = this.getIntent().getExtras();
-        if(tourinfo != null)
-        {
+        if(tourinfo != null) {
             currenttour = (FullTour)tourinfo.getSerializable(START_TOUR_PASS);
             TextView tourname = this.findViewById(R.id.currentTourName);
             tourname.setText(currenttour.getName());
             getGoogleMapReady();
-
         }
-
-
-
-
         initializeMenu();
     }
 
