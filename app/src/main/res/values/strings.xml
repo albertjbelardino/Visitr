@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Visitr</string>
-    <string name="API_ID">AIzaSyBGhkmhZ16ifE8ST9wKNAhmMCHmqLLDm6Q</string>
     <string name="menu_local">Tours</string>
     <string name="menu_tour">Your Tour</string>
     <string name="menu_profile">Profile</string>
