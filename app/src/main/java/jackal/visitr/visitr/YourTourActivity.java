@@ -11,10 +11,12 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +28,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 
+import java.util.logging.Logger;
+
 import AndroidFactories.MenuFactory;
 import Objects.FullTour;
 
@@ -35,9 +39,22 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
     Toolbar menuToolbar;
     FullTour currenttour;
     boolean paused;
+    boolean arrived;
+    boolean firstpress;
+    boolean tourfinished;
     AlertDialog shownPopup;
     private GoogleMap currentmap;
     LocationManager locationmanager;
+    int currentlocation;
+    int previouslocation;
+    int nextlocation;
+    int currentlocationindex;
+
+    TextView nextstop;
+    TextView previousstop;
+    TextView currentstop;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +66,16 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
             currenttour = (FullTour)tourinfo.getSerializable(START_TOUR_PASS);
             TextView tourname = this.findViewById(R.id.currentTourName);
             tourname.setText(currenttour.getName());
+            nextstop = findViewById(R.id.nextStop);
+            currentstop = findViewById(R.id.currentStop);
+            previousstop = findViewById(R.id.lastStop);
+
+            nextlocation = currenttour.getPlaces().get(0);
+            nextstop.setText(Integer.toString(nextlocation));
+            arrived = true;
+            firstpress = true;
+            tourfinished = false;
+
             getGoogleMapReady();
 
         }
@@ -83,15 +110,26 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
 
     public void onStopClicked(View view)
     {
+        showStopTourDialogue(true);
+    }
+
+    void showStopTourDialogue(boolean cancelable)
+    {
         final AlertDialog.Builder alertbuilder = new AlertDialog.Builder(this);
         alertbuilder.setCancelable(true);
         LayoutInflater layoutinflater = LayoutInflater.from(this);
         final View popupview = layoutinflater.inflate(R.layout.stoptour_popup, null);
+        alertbuilder.setCancelable(cancelable);
+        Button no = popupview.findViewById(R.id.no);
+        if(!cancelable)
+        {
+            float d = (float)(0.25);
+            no.setAlpha(d);
+        }
+        no.setClickable(cancelable);
         alertbuilder.setView(popupview);
         alertbuilder.create();
         shownPopup = alertbuilder.show();
-
-
     }
 
     public void onPauseButtonClicked(View view)
@@ -103,6 +141,57 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
         else
         {
 
+        }
+    }
+
+    public void onNextButtonClicked(View view)
+    {
+        if(currenttour != null) {
+            if (firstpress) {
+                arrived = true;
+                firstpress = false;
+                currentlocation = currenttour.getPlaces().get(0);
+                currentstop.setText(Integer.toString(currentlocation));
+                nextlocation = currenttour.getPlaces().get(1);
+                nextstop.setText(Integer.toString(nextlocation));
+                currentlocationindex = 0;
+                //the person is at the first location
+            } else if (!arrived) {
+                arrived = true;
+                currentlocationindex = currentlocationindex + 1;
+                currentlocation = currenttour.getPlaces().get(currentlocationindex);
+                currentstop.setText(Integer.toString(currentlocation));
+                if(!((currentlocationindex + 1) >= currenttour.getPlaces().size())) {
+                    nextlocation = currenttour.getPlaces().get(currentlocationindex + 1);
+                    nextstop.setText(Integer.toString(nextlocation));
+                }
+                else
+                {
+                    tourfinished = true;
+                    nextstop.setText("");
+                }
+
+                //the person is at a location
+
+            } else if(arrived){
+                arrived = false;
+                if(tourfinished)
+                {
+                    showStopTourDialogue(false);
+                }
+                else {
+                    previouslocation = currentlocation;
+                    previousstop.setText(Integer.toString(previouslocation));
+                    nextlocation = currenttour.getPlaces().get(currentlocationindex + 1);
+                    nextstop.setText(Integer.toString(nextlocation));
+
+                    currentstop.setText("");
+                }
+
+                //the person is leaving a location
+                //previous is current, next is current + 1
+
+            }
         }
     }
 

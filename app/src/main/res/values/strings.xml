@@ -13,6 +13,10 @@
     <string name="stop_tour_no">NO</string>
     <string name="stop_tour_review">YES AND REVIEW</string>
     <string name="stop_tour_text">Are you sure you want to end your tour?</string>
+    <string name="next_button">NEXT</string>
+    <string name="previous_text">Last stop: </string>
+    <string name="next_text">Next stop: </string>
+    <string name="current_text">Current stop: </string>
 
     <string-array name="genre_string_array">
         <item></item>

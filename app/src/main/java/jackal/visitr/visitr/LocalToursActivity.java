@@ -34,7 +34,9 @@ import com.amazonaws.services.dynamodbv2.model.AttributeValue;
 import com.amazonaws.services.dynamodbv2.model.ComparisonOperator;
 import com.amazonaws.services.dynamodbv2.model.Condition;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import Adapters.GenreDropdownAdapter;
@@ -170,6 +172,12 @@ public class LocalToursActivity extends AppCompatActivity {
         testing1.setGoogle_city_id("the city");
         testing1.setRating(5);
         testing1.setTotal_time(12);
+        List<Integer> testlist1 = new ArrayList<Integer>();
+        testlist1.add(1000);
+        testlist1.add(989);
+        testlist1.add(4);
+        testlist1.add(6767);
+        testing1.setPlaces(testlist1);
 
         test[0] = testing1;
 
@@ -183,6 +191,13 @@ public class LocalToursActivity extends AppCompatActivity {
         testing2.setGoogle_city_id("the city two");
         testing2.setRating(2);
         testing2.setTotal_time(18);
+        List<Integer> testlist2 = new ArrayList<Integer>();
+        testlist2.add(200);
+        testlist2.add(94922);
+        testlist2.add(455);
+        testlist2.add(8862);
+        testing2.setPlaces(testlist2);
+
 
         test[1] = testing2;
 
