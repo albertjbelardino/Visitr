@@ -1,6 +1,7 @@
 package jackal.visitr.visitr;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -25,11 +26,17 @@ import com.amazonaws.mobile.client.AWSStartupResult;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.gson.Gson;
 import com.google.maps.PlacesApi;
 
 import java.util.ArrayList;
 
+import Adapters.PlaceAutocompleteAdapter;
 import AndroidFactories.MenuFactory;
 import AndroidFactories.PreferenceFactory;
 import Mappers.Create;
@@ -38,7 +45,7 @@ import Models.TourDO;
 import Objects.FullTour;
 import Objects.Place;
 
-public class CreateTourActivity extends AppCompatActivity {
+public class CreateTourActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
     DynamoDBMapper dynamoDBMapper;
     Toolbar menuToolbar;
@@ -46,14 +53,18 @@ public class CreateTourActivity extends AppCompatActivity {
     AutoCompleteTextView tourLocationAutoCompleteTextView;
     Spinner genreSpinner;
     String genreString;
+    GoogleApiClient googleApiClient;
+    PlaceAutocompleteAdapter placeAutocompleteAdapter;
+    LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
+            new LatLng(-40, -168), new LatLng(71, 136));
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_tour);
 
-        initializeTextViews();
         initializeAutoCompleteTextViews();
+        initializeTextViews();
         inititalizeMapper();
         initializeGenreSpinner();
         initializeMenu();
@@ -63,36 +74,17 @@ public class CreateTourActivity extends AppCompatActivity {
 
         tourLocationAutoCompleteTextView = (AutoCompleteTextView) findViewById(R.id.tourLocationAutoCompleteTextView);
 
-        tourLocationAutoCompleteTextView.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        googleApiClient = new GoogleApiClient
+                .Builder(this)
+                .addApi(Places.GEO_DATA_API)
+                .addApi(Places.PLACE_DETECTION_API)
+                .enableAutoManage(this, this)
+                .build();
 
-            }
+        placeAutocompleteAdapter = new PlaceAutocompleteAdapter(this, googleApiClient,
+                LAT_LNG_BOUNDS, null);
 
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                if(charSequence.length() == 5) {
-                    initializeSuggestions(charSequence.toString());
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
-        });
-        tourLocationAutoCompleteTextView.setAdapter(null);
-
-        tourLocationAutoCompleteTextView.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        tourLocationAutoCompleteTextView.setAdapter(placeAutocompleteAdapter);
     }
 
     private void initializeSuggestions(CharSequence charSequence) {
@@ -219,5 +211,10 @@ public class CreateTourActivity extends AppCompatActivity {
 
     public boolean onCreateClicked(MenuItem item) {
         return false;
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
     }
 }
