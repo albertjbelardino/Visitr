@@ -61,7 +61,6 @@ public class CreateTourActivity extends AppCompatActivity implements GoogleApiCl
     PlaceAutocompleteAdapter placeAutocompleteAdapter;
     LatLngBounds LAT_LNG_BOUNDS = new LatLngBounds(
             new LatLng(-40, -168), new LatLng(71, 136));
-
     private String city_name;
     private String google_places_id;
 

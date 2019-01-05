@@ -15,6 +15,11 @@ public class Place {
 
     }
 
+    public Place(String name, String google_places_id) {
+        this.name = name;
+        this.google_places_id = google_places_id;
+    }
+
     public int getId() {
         return id;
     }
