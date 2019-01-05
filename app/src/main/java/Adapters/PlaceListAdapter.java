@@ -47,6 +47,7 @@ public class PlaceListAdapter extends RecyclerView.Adapter<PlaceListAdapter.MyVi
     }
 
 
+
     @Override
     public PlaceListAdapter.MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 

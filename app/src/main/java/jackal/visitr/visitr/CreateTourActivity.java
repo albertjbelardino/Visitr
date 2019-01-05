@@ -216,7 +216,8 @@ public class CreateTourActivity extends AppCompatActivity implements GoogleApiCl
     }
 
     public boolean onProfileClicked(MenuItem item) {
-        MenuFactory.startProfileActivity(this);
+        //TODO change back when nav menu added
+        MenuFactory.startAddPlaceActivity(this);
         //finish();
         return(true);
     }

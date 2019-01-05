@@ -3,6 +3,7 @@ package AndroidFactories;
 import android.content.Context;
 import android.content.Intent;
 
+import jackal.visitr.visitr.AddPlaceActivity;
 import jackal.visitr.visitr.CreateTourActivity;
 import jackal.visitr.visitr.LocalToursActivity;
 import jackal.visitr.visitr.ProfileActivity;
@@ -30,6 +31,12 @@ public class MenuFactory {
 
     public static void startYourTourActivity(Context context) {
         Intent i = new Intent(context, YourTourActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
+        context.startActivity(i);
+    }
+
+    public static void startAddPlaceActivity(Context context) {
+        Intent i = new Intent(context, AddPlaceActivity.class);
         i.setFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT);
         context.startActivity(i);
     }
