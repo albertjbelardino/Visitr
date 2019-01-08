@@ -1,5 +1,7 @@
 package Objects;
 
+import Models.PlaceDO;
+
 public class Place {
     private int id;
     private String name;
@@ -18,6 +20,18 @@ public class Place {
     public Place(String name, String google_places_id) {
         this.name = name;
         this.google_places_id = google_places_id;
+    }
+
+    public Place(PlaceDO pdo)
+    {
+        this.id = pdo.get_id();
+        this.name = pdo.get_name();
+        this.description = pdo.get_description();
+        this.google_city_id  = pdo.get_google_city_id();
+        this.google_places_id = pdo.get_google_places_id();
+        this.latitude = pdo.get_latitude();
+        this.longitude = pdo.get_longitude();
+        this.time_spent = pdo.get_time_spent();
     }
 
     public int getId() {

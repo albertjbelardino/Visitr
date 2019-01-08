@@ -28,6 +28,7 @@ import com.amazonaws.mobile.client.AWSStartupResult;
 import com.amazonaws.mobile.config.AWSConfiguration;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExpression;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
 import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedList;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.model.AttributeValue;
@@ -44,6 +45,7 @@ import Adapters.TourListAdapter;
 import AndroidFactories.MenuFactory;
 import AndroidFactories.PopupFactory;
 import AndroidFactories.PreferenceFactory;
+import Mappers.Create;
 import Models.TourDO;
 import Objects.FullTour;
 
@@ -62,7 +64,7 @@ public class LocalToursActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_local_tours);
 
-        inititalizeMapper();
+        dynamoDBMapper = Create.inititalizeMapper(this);
         initializeMenu();
         initializeRecyclerView();
         initializeGenreSpinner();
@@ -74,27 +76,6 @@ public class LocalToursActivity extends AppCompatActivity {
         setSupportActionBar(menuToolbar);
     }
 
-    private void inititalizeMapper() {
-        AWSMobileClient.getInstance().initialize(this, new AWSStartupHandler() {
-            @Override
-            public void onComplete(AWSStartupResult awsStartupResult) {
-                Log.d("YourMainActivity", "AWSMobileClient is instantiated and you are connected to AWS!");
-            }
-        }).execute();
-
-        AWSMobileClient.getInstance().initialize(this).execute();
-
-        AWSCredentialsProvider credentialsProvider = AWSMobileClient.getInstance().getCredentialsProvider();
-        AWSConfiguration configuration = AWSMobileClient.getInstance().getConfiguration();
-
-        // Add code to instantiate a AmazonDynamoDBClient
-        AmazonDynamoDBClient dynamoDBClient = new AmazonDynamoDBClient(credentialsProvider);
-
-        this.dynamoDBMapper = DynamoDBMapper.builder()
-                .dynamoDBClient(dynamoDBClient)
-                .awsConfiguration(configuration)
-                .build();
-    }
 
     public void queryGenre(final AdapterView<?> parent, final int position) {
 
@@ -113,10 +94,11 @@ public class LocalToursActivity extends AppCompatActivity {
                 DynamoDBQueryExpression<TourDO> queryExpression = new DynamoDBQueryExpression<TourDO>()
                         .withHashKeyValues(tourDO)
                         .withIndexName("GenreIndex")
-                        .withConsistentRead(false);
+                        .withConsistentRead(false)
+                        .withLimit(10);
 
                 PaginatedList<TourDO> result = dynamoDBMapper.query(TourDO.class, queryExpression);
-                final FullTour[] tour_array = new FullTour[10];
+                final FullTour[] tour_array = new FullTour[result.size()];
 
                 for (int i = 0; i < result.size(); i++)
                     tour_array[i] = new FullTour(result.get(i));
@@ -154,58 +136,38 @@ public class LocalToursActivity extends AppCompatActivity {
 
     public void initializeRecyclerView() {
         //setting up recyclerView
+
         tourRecyclerView = (RecyclerView) findViewById(R.id.tour_list);
-
-        FullTour[] test = new FullTour[2];
-        Set<String> t = new HashSet<String>();
-        t.add("this");
-        t.add("testword");
-        t.add("wow");
-
-        FullTour testing1 = new FullTour(new TourDO());
-        testing1.setName("Setting name");
-        testing1.setID(1);
-        testing1.setCity("place");
-        testing1.setDescription("This us the first test description.");
-        testing1.setGenre("testgenre");
-        testing1.setKeywords(t);
-        testing1.setGoogle_city_id("the city");
-        testing1.setRating(5);
-        testing1.setTotal_time(12);
-        List<Integer> testlist1 = new ArrayList<Integer>();
-        testlist1.add(1000);
-        testlist1.add(989);
-        testlist1.add(4);
-        testlist1.add(6767);
-        testing1.setPlaces(testlist1);
-
-        test[0] = testing1;
-
-        FullTour testing2 = new FullTour(new TourDO());
-        testing2.setID(2);
-        testing2.setName("test2 with name");
-        testing2.setCity("this is a city");
-        testing2.setDescription("This us the second test description.");
-        testing2.setGenre("testgenre2");
-        testing2.setKeywords(t);
-        testing2.setGoogle_city_id("the city two");
-        testing2.setRating(2);
-        testing2.setTotal_time(18);
-        List<Integer> testlist2 = new ArrayList<Integer>();
-        testlist2.add(200);
-        testlist2.add(94922);
-        testlist2.add(455);
-        testlist2.add(8862);
-        testing2.setPlaces(testlist2);
-
-
-        test[1] = testing2;
-
-        tourListAdapter = new TourListAdapter(test, this);
+        FullTour[] placehold = new FullTour[0];
+        tourListAdapter = new TourListAdapter(placehold, this);
         LinearLayoutManager llm = new LinearLayoutManager(this);
         tourRecyclerView.setAdapter(tourListAdapter);
         tourRecyclerView.setLayoutManager(llm);
         tourRecyclerView.setHasFixedSize(true);
+
+        new Thread(new Runnable() {
+            @Override
+
+            public void run() {
+
+                PaginatedList<TourDO> alltours = dynamoDBMapper.scan(TourDO.class, new DynamoDBScanExpression().withLimit(10));
+                final FullTour[] alltoursarray = new FullTour[alltours.size()];
+                Log.d("see", Integer.toString(alltours.size()));
+                for (int i = 0; i < alltours.size(); i++) {
+                    alltoursarray[i] = new FullTour(alltours.get(i));
+                }
+
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        final FullTour[] final_tour_array_all = alltoursarray;
+                        tourListAdapter.setTourlist(final_tour_array_all);
+                        tourRecyclerView.setAdapter(tourListAdapter);
+                    }
+                });
+            }
+        }).start();
+
     }
 
     public void makePopUp(View view, FullTour tourfromadapter, final LocalToursActivity currentactivity)

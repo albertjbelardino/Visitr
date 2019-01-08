@@ -20,20 +20,38 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.auth.AWSCredentialsProvider;
+import com.amazonaws.mobile.client.AWSMobileClient;
+import com.amazonaws.mobile.client.AWSStartupHandler;
+import com.amazonaws.mobile.client.AWSStartupResult;
+import com.amazonaws.mobile.config.AWSConfiguration;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBMapper;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBQueryExpression;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.DynamoDBScanExpression;
+import com.amazonaws.mobileconnectors.dynamodbv2.dynamodbmapper.PaginatedList;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import AndroidFactories.MenuFactory;
+import Mappers.Create;
+import Models.PlaceDO;
+import Models.TourDO;
 import Objects.FullTour;
+import Objects.Place;
 
 public class YourTourActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -48,9 +66,9 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
     AlertDialog shownPopup;
     private GoogleMap currentmap;
     LocationManager locationmanager;
-    int currentlocation;
-    int previouslocation;
-    int nextlocation;
+    String currentlocation;
+    String previouslocation;
+    String nextlocation;
     int currentlocationindex;
     TextView nextstop;
     TextView previousstop;
@@ -60,6 +78,10 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
     int seconds;
     int minutes;
     TourTimerTask timertask;
+    DynamoDBMapper dynamoDBMapper;
+    Place[] places;
+    Marker[] placemarkers;
+    Thread getplacesthread;
 
 
     class TourTimerTask extends TimerTask
@@ -86,12 +108,15 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
             timeview = findViewById(R.id.tourtimer);
             pauseresumebutton = findViewById(R.id.resumeButton);
 
-            nextlocation = currenttour.getPlaces().get(0);
-            nextstop.setText(Integer.toString(nextlocation));
+
             arrived = true;
             firstpress = true;
             tourfinished = false;
             paused = false;
+            dynamoDBMapper = Create.inititalizeMapper(this);
+            placemarkers = new Marker[currenttour.getPlaces().size()];
+            getPlacesFromServer();
+
 
 
             seconds = 0;
@@ -100,9 +125,44 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
             startTimer();
 
             getGoogleMapReady();
+
         }
         initializeMenu();
     }
+
+    public void getPlacesFromServer()
+    {
+        final List<Integer> touridlist = currenttour.getPlaces();
+
+        places = new Place[touridlist.size()];
+        getplacesthread = new Thread(new Runnable() {
+            @Override
+
+            public void run() {
+
+                PlaceDO placeDO = new PlaceDO();
+                for(int i = 0; i < touridlist.size(); i++) {
+                    placeDO.set_id(touridlist.get(i));
+                    PaginatedList<PlaceDO> placelist = dynamoDBMapper.query(PlaceDO.class, new DynamoDBQueryExpression<PlaceDO>()
+                            .withLimit(20)
+                            .withConsistentRead(false)
+                            .withHashKeyValues(placeDO));
+                    places[i] = new Place(placelist.get(0));
+                }
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        nextlocation = places[0].getName();
+                        nextstop.setText(nextlocation);
+                    }
+                });
+            }
+        });
+        getplacesthread.start();
+    }
+
+
+
 
 
     @Override
@@ -172,20 +232,23 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
             if (firstpress) {
                 arrived = true;
                 firstpress = false;
-                currentlocation = currenttour.getPlaces().get(0);
-                currentstop.setText(Integer.toString(currentlocation));
-                nextlocation = currenttour.getPlaces().get(1);
-                nextstop.setText(Integer.toString(nextlocation));
+                currentlocation = places[0].getName();
+                currentstop.setText(currentlocation);
+                nextlocation = places[1].getName();
+                nextstop.setText(nextlocation);
                 currentlocationindex = 0;
+                placemarkers[0].setAlpha((float).25);
                 //the person is at the first location
             } else if (!arrived) {
                 arrived = true;
+
                 currentlocationindex = currentlocationindex + 1;
-                currentlocation = currenttour.getPlaces().get(currentlocationindex);
-                currentstop.setText(Integer.toString(currentlocation));
+                placemarkers[currentlocationindex].setAlpha((float).25);
+                currentlocation = places[currentlocationindex].getName();
+                currentstop.setText(currentlocation);
                 if(!((currentlocationindex + 1) >= currenttour.getPlaces().size())) {
-                    nextlocation = currenttour.getPlaces().get(currentlocationindex + 1);
-                    nextstop.setText(Integer.toString(nextlocation));
+                    nextlocation = places[currentlocationindex + 1].getName();
+                    nextstop.setText(nextlocation);
                 }
                 else
                 {
@@ -203,9 +266,9 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
                 }
                 else {
                     previouslocation = currentlocation;
-                    previousstop.setText(Integer.toString(previouslocation));
-                    nextlocation = currenttour.getPlaces().get(currentlocationindex + 1);
-                    nextstop.setText(Integer.toString(nextlocation));
+                    previousstop.setText(previouslocation);
+                    nextlocation = places[currentlocationindex + 1].getName();
+                    nextstop.setText(nextlocation);
 
                     currentstop.setText("");
                 }
@@ -220,6 +283,7 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
     public void onStopYesClicked(View view)
     {
         shownPopup.dismiss();
+        currentmap.clear();
         finish();
         MenuFactory.startLocalToursActivity(this);
     }
@@ -291,14 +355,27 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
     public void onMapReady(GoogleMap googleMap) {
         currentmap = googleMap;
         currentmap.getUiSettings().setMyLocationButtonEnabled(false);
+        currentmap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
 
-        centerMap();
+
+                try {
+                    getplacesthread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                centerMap();
+            }
+        });
+
     }
 
     public void centerMap()
     {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                == PackageManager.PERMISSION_GRANTED)
+                == PackageManager.PERMISSION_GRANTED )
         {
 
             currentmap.setMyLocationEnabled(true);
@@ -309,13 +386,44 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
             double lat = location.getLatitude();
             double lng = location.getLongitude();
             LatLng coordinate = new LatLng(lat, lng);
-            CameraUpdate positioncamera = CameraUpdateFactory.newLatLng(coordinate);
+            double latavg = lat;
+            double lngavg = lng;
+            double latmax = lat;
+            double lngmax = lng;
+            double latmin = lat;
+            double lngmin = lng;
+            for(int e = 0; e < places.length; e++)
+            {
+                lat = places[e].getLatitude();
+                if(lat > latmax)
+                {
+                    latmax = lat;
+                }
+                if(lat < latmin)
+                {
+                    latmin = lat;
+                }
+                lng = places[e].getLongitude();
+                if(lng > lngmax)
+                {
+                    lngmax = lng;
+                }
+                if(lng < lngmin)
+                {
+                    lngmin = lng;
+                }
+                LatLng placecoord = new LatLng(lat, lng);
+                MarkerOptions currentmarker = new MarkerOptions();
+                currentmarker.position(placecoord);
+                currentmarker.title(places[e].getName());
+                placemarkers[e] = currentmap.addMarker(currentmarker);
+            }
+            LatLng upperbound = new LatLng(latmax, lngmax);
+            LatLng lowerbound = new LatLng(latmin, lngmin);
 
-            currentmap.moveCamera(positioncamera);
-
-            CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
-
-            currentmap.moveCamera(zoom);
+            LatLngBounds currentbounds = new LatLngBounds(lowerbound, upperbound);
+            CameraUpdate zoom = CameraUpdateFactory.newLatLngBounds(currentbounds, 200);
+            currentmap.animateCamera(zoom);
         }
     }
 
@@ -328,6 +436,7 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
                 seconds = 0;
             }
             timeview.setText("Min: " + Integer.toString(minutes) + " Sec: " + Integer.toString(seconds));
+
 
         }
     };

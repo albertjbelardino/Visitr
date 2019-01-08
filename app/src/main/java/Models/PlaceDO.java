@@ -26,8 +26,8 @@ public class PlaceDO {
         this._id = _id;
     }
 
-    @DynamoDBRangeKey(attributeName = "tour_id")
-    @DynamoDBAttribute(attributeName = "tour_id")
+    @DynamoDBRangeKey(attributeName = "name")
+    @DynamoDBAttribute(attributeName = "name")
     public String get_name() {
         return _name;
     }
