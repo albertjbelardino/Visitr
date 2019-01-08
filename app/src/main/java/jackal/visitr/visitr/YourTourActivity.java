@@ -28,6 +28,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import AndroidFactories.MenuFactory;
@@ -38,6 +40,7 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
     private final String START_TOUR_PASS = "temporarypassword";
     Toolbar menuToolbar;
     FullTour currenttour;
+    Button pauseresumebutton;
     boolean paused;
     boolean arrived;
     boolean firstpress;
@@ -49,12 +52,24 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
     int previouslocation;
     int nextlocation;
     int currentlocationindex;
-
     TextView nextstop;
     TextView previousstop;
     TextView currentstop;
+    TextView timeview;
+    Timer tourtime;
+    int seconds;
+    int minutes;
+    TourTimerTask timertask;
 
 
+    class TourTimerTask extends TimerTask
+    {
+
+        @Override
+        public void run() {
+            runOnUiThread(tour_timer_incriment);
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,12 +83,21 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
             nextstop = findViewById(R.id.nextStop);
             currentstop = findViewById(R.id.currentStop);
             previousstop = findViewById(R.id.lastStop);
+            timeview = findViewById(R.id.tourtimer);
+            pauseresumebutton = findViewById(R.id.resumeButton);
 
             nextlocation = currenttour.getPlaces().get(0);
             nextstop.setText(Integer.toString(nextlocation));
             arrived = true;
             firstpress = true;
             tourfinished = false;
+            paused = false;
+
+
+            seconds = 0;
+            minutes = 0;
+            tourtime = new Timer();
+            startTimer();
 
             getGoogleMapReady();
         }
@@ -128,13 +152,17 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
 
     public void onPauseButtonClicked(View view)
     {
-        if(paused)
+        if(!paused)
         {
-
+            paused = true;
+            timertask.cancel();
+            pauseresumebutton.setText("RESUME");
         }
         else
         {
-
+            paused = false;
+            startTimer();
+            pauseresumebutton.setText("PAUSE");
         }
     }
 
@@ -208,6 +236,12 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
     public void onStopReviewClicked(View view)
     {
 
+    }
+
+    public void startTimer()
+    {
+        timertask = new TourTimerTask();
+        tourtime.schedule(timertask, 1000, 1000);
     }
 
     private void initializeMenu() {
@@ -284,4 +318,17 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
             currentmap.moveCamera(zoom);
         }
     }
+
+    private Runnable tour_timer_incriment = new Runnable() {
+        public void run() {
+            seconds = seconds + 1;
+            if(seconds >= 60)
+            {
+                minutes = minutes + 1;
+                seconds = 0;
+            }
+            timeview.setText("Min: " + Integer.toString(minutes) + " Sec: " + Integer.toString(seconds));
+
+        }
+    };
 }

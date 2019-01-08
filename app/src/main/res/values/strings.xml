@@ -17,6 +17,7 @@
     <string name="previous_text">Last stop: </string>
     <string name="next_text">Next stop: </string>
     <string name="current_text">Current stop: </string>
+    <string name="timer_default">Min: 0 Sec: 0</string>
 
     <string-array name="genre_string_array">
         <item></item>
