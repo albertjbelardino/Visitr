@@ -10,6 +10,8 @@ import android.location.LocationManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -46,6 +48,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Logger;
 
+import Adapters.PlaceInfoListAdapter;
 import AndroidFactories.MenuFactory;
 import Mappers.Create;
 import Models.PlaceDO;
@@ -82,6 +85,8 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
     Place[] places;
     Marker[] placemarkers;
     Thread getplacesthread;
+    RecyclerView placerecycler;
+    PlaceInfoListAdapter placelistadapter;
 
 
     class TourTimerTask extends TimerTask
@@ -116,7 +121,7 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
             dynamoDBMapper = Create.inititalizeMapper(this);
             placemarkers = new Marker[currenttour.getPlaces().size()];
             getPlacesFromServer();
-
+            setUpPlaceInfo();
 
 
             seconds = 0;
@@ -440,4 +445,19 @@ public class YourTourActivity extends AppCompatActivity implements OnMapReadyCal
 
         }
     };
+
+    public void setUpPlaceInfo()
+    {
+        try {
+            getplacesthread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        placerecycler = (RecyclerView) findViewById(R.id.placeRecyclerView);
+        placelistadapter = new PlaceInfoListAdapter(places, this);
+        LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        placerecycler.setAdapter(placelistadapter);
+        placerecycler.setLayoutManager(llm);
+        placerecycler.setHasFixedSize(true);
+    }
 }
