@@ -13,7 +13,7 @@ android {
 
     }
     buildTypes {
-        debug{
+        debug {
             resValue "string", "GOOGLE_MAPS_API", GoogleMapsAPI
         }
         release {
@@ -48,4 +48,5 @@ dependencies {
     implementation 'com.google.maps:google-maps-services:0.9.1'
     implementation 'org.slf4j:slf4j-simple:1.7.25'
     implementation 'com.google.android.gms:play-services-places:16.0.0'
+    implementation 'com.amazonaws:aws-android-sdk-cognitoidentityprovider:2.7.+'
 }
