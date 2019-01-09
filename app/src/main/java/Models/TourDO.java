@@ -94,7 +94,7 @@ public class TourDO {
         return _places;
     }
 
-    public void set_places(List<Integer> places) {
+    public void setPlaces(List<Integer> places) {
         this._places = places;
     }
 
