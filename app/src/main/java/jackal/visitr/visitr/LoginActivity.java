@@ -1,5 +1,6 @@
 package jackal.visitr.visitr;
 
+import android.app.Activity;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -7,6 +8,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.amazonaws.mobile.auth.core.IdentityProvider;
+import com.amazonaws.mobile.auth.core.SignInResultHandler;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoDevice;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUser;
 import com.amazonaws.mobileconnectors.cognitoidentityprovider.CognitoUserDetails;
@@ -45,15 +48,13 @@ public class LoginActivity extends AppCompatActivity {
         final AuthenticationHandler authenticationHandler = new AuthenticationHandler() {
             @Override
             public void onSuccess(CognitoUserSession userSession, CognitoDevice newDevice) {
-                Log.i(TAG, userSession.toString());
+                Log.i(TAG, "Login Successful");
             }
 
             @Override
             public void getAuthenticationDetails(AuthenticationContinuation authenticationContinuation, String userId) {
                 AuthenticationDetails authenticationDetails = new AuthenticationDetails(
                                         userId, passwordEditText.getText().toString(), null);
-
-                Log.i(TAG, "in getAuthenticationDetails()");
 
                 authenticationContinuation.setAuthenticationDetails(authenticationDetails);
                 authenticationContinuation.continueTask();
@@ -90,23 +91,12 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                CognitoFactory cognitoFactory = new CognitoFactory(LoginActivity.this);
+                CognitoFactory cognitoFactory = new CognitoFactory(getApplicationContext());
 
                 CognitoUser user = cognitoFactory.getUserPool().getUser(
                                                 usernameEditText.getText().toString());
 
                 user.getSessionInBackground(authenticationHandler);
-
-                user.getDetails(new GetDetailsHandler() {
-                    @Override
-                    public void onSuccess(CognitoUserDetails cognitoUserDetails) {
-                        Log.i(TAG, cognitoUserDetails.getAttributes().getAttributes().toString());
-                    }
-                    @Override
-                    public void onFailure(Exception exception) {
-                        Log.i(TAG, exception.getMessage());
-                    }
-                });
             }
         });
 
